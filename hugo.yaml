@@ -1,0 +1,7 @@
+baseURL: https://vainiusd.github.io/notes/
+relativeURLs: true
+languageCode: en-us
+theme: elephants
+params:
+  sitename: Public Notes
+title: Notes
