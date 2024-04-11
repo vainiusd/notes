@@ -19,7 +19,7 @@ Supported inventroy file formats:
 - Python (scripts)
 
 First inventory file:
-```
+```bash
 cat <<'EOF' > hosts
 ungrouped:
   hosts:
@@ -27,7 +27,8 @@ ungrouped:
 EOF
 ```
 Inventory output and structure can be reviewed by issuing `ansible-inventory --list`. Inventory flag `-i` still applies here if the inventory file does not match Your project config.
-```(ansible-lab) user@ubuntu1:~/lab$ ansible-inventory --list
+```bash
+$ ansible-inventory --list
 {
     "_meta": {
         "hostvars": {}
@@ -49,7 +50,7 @@ Inventory output and structure can be reviewed by issuing `ansible-inventory --l
 
 At each step check the output of `ansible-inventory --list`.  
 Creating 3 groups **A,B,C**. 
-```
+```bash
 cat <<'EOF' > hosts
 A:
   hosts:
@@ -65,7 +66,7 @@ EOF
 ```
 
 Adding a merged group consisting **B** and **C** group  members to group **BC**:
-```
+```bash
 cat <<'EOF' >> hosts
 BC:
   children:
@@ -77,7 +78,7 @@ EOF
 ### Multiple files
 You can arragne Your inventory in multiple files stored in a directory and point Your inventory collection to that directory.
 
-```
+```bash
 mkdir inventory
 cat <<'EOF' > inventory/A.yml
 A:
@@ -107,11 +108,10 @@ Simple example of an inventory script (although not implemented: [link](https://
 Some "scripts" are matured and valued as inventory plugins. These are usually predeveloped scripts for standard itegrations with software suites or compute environments: inventory software (Infoblox, Netbox, Zabbix), environments (VMware, AWS, GCP, Azure, Kubernetes).
 
 An interesting inventory plugin in this network topic might NMAP inventory plugin:
-```
+```bash
 mkdir nmap-ansible-inventory
 cd nmap-ansible-inventory
-```
-```
+
 cat <<'EOF' > ansible.cfg
 [defaults]
 inventory = ./nmap-inventory.yml
@@ -120,8 +120,7 @@ interpreter_python = auto
 [inventory]
 enable_plugins = community.general.nmap
 EOF
-```
-```
+
 cat <<'EOF' > nmap-inventory.yml
 plugin: community.general.nmap
 strict: false
@@ -147,7 +146,7 @@ Variables can be set for hosts individually and for groups of devices (decouples
 Host variables can easily be set in inventory file(s) inline with the device or in a separate file in hostvars directory.
 
 Directly into inventory file:
-```
+```bash
 cd ~/lab/
 cat <<'EOF' > hosts
 A:
@@ -169,7 +168,7 @@ BC:
 EOF
 ```
 Or by creating a host_vars file:
-```
+```bash
 mkdir host_vars
 cat <<'EOF' > host_vars/N9K-1.yml
 var1_2: host_vars_file
@@ -180,7 +179,7 @@ EOF
 
 ### Group
 Exactly the same applies to groups. Provding only altered sections for brevity:
-```
+```yaml
 # From hosts file
 BC:
   vars:
@@ -190,7 +189,7 @@ BC:
     C:
 ```
 And in a separate group_vars file:
-```
+```bash
 mkdir group_vars
 cat <<'EOF' > group_vars/BC.yml
 var3_2: group_vars_file
@@ -206,22 +205,22 @@ In simple words, Ansible vault allows encrypting [any file that is used by ansib
 Security and encryptions is always an important and comprehensive topic. Please take time to dig and test out the necessary features. Here we provide only an introductionary example.
 
 Create a host_vars inventory file that is encrypted:
-```
+```bash
 cat <<'EOF' > .password_file
 AABBCCDDEEFFGGHHIIJJKK11223344556677889900
 EOF
 ```
-```
+```bash
 cat <<'EOF' >> ansible.cfg
 vault_password_file = .password_file
 EOF
 ```
 Create the file:
-```
+```bash
 ansible-vault create host_vars/N9K-2.yml
 ```
 In the editor add and save:
-```
+```yaml
 var2_2: encrypted_host_vars_file
 ``` 
 
